@@ -107,6 +107,7 @@ INT WINAPI wWinMain(
     PhInitializeAppSystem();
     PhInitializeCallbacks();
     PhEmInitialization();
+    PhInitializeLanguageSupport();
 
     if (PhStartupParameters.ShowOptions)
     {
@@ -189,6 +190,8 @@ INT WINAPI wWinMain(
     result = PhMainMessageLoop();
 
     PhEnableTerminationPolicy(FALSE);
+    
+    PhCleanupLanguageSupport();
 
     if (PhEnableKsiSupport)
     {

@@ -35,6 +35,7 @@
 #include <phfwddef.h>
 #include <appsup.h>
 #include <searchbox.h>
+#include <phlang.h>
 
 // main
 
