@@ -10,33 +10,45 @@ on:
 
 jobs:
   build:
-    # 使用最新的 Windows 虚拟机环境
+    # 使用官方指定的 Windows 虚拟机环境
     runs-on: windows-latest
 
     steps:
-      # 第一步：检出代码和所有子模块
+      # 第一步：检出代码
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          # 保留子模块拉取，这是个好习惯
           submodules: 'recursive'
 
-      # 第二步：设置 MSBuild 环境 (脚本需要它)
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
+      # 第二步 (新增): 设置 NuGet 环境
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
 
-      # 第三步：运行初始化脚本 (关键步骤)
-      # 这一步会编译项目所需的自定义工具, 例如 CustomBuildTool.exe
+      # 第三步 (新增): 缓存 NuGet 包以加快未来构建速度
+      - name: NuGet Cache
+        uses: actions/cache@v4
+        with:
+          path: packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.config') }}
+
+      # 第四步 (关键): 恢复 NuGet 包
+      # 这是我们之前缺失的关键步骤, 它会下载项目所需的外部库
+      - name: Nuget Restore
+        run: nuget restore .\packages.config -PackagesDirectory .\packages\
+        shell: cmd
+
+      # 第五步：运行初始化脚本
       - name: Run Build Initialization
-        run: .\build\build_init.cmd
+        run: build\build_init.cmd
         shell: cmd
 
-      # 第四步：运行发布构建脚本
-      # 现在初始化已完成, 此脚本可以找到所有工具和依赖项
+      # 第六步：运行发布构建脚本
       - name: Run Release Build
-        run: .\build\build_release.cmd
+        run: build\build_release.cmd
         shell: cmd
 
-      # 第五步：上传构建好的文件
+      # 第七步：上传构建好的文件
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
