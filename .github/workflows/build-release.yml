@@ -1,87 +1,23 @@
-# 工作流的名称
-name: Build System Informer (Fixed)
+name: Build System Informer (Official Method)
 
-# 触发工作流的事件
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
-    # 使用官方指定的 Windows 虚拟机环境
     runs-on: windows-latest
-    
-    steps:
-      # 第一步：检出代码
-      - name: Checkout repository
-        uses: actions/checkout@v5  # 更新到v5，与官方保持一致
-        with:
-          submodules: 'recursive'
-          fetch-depth: 0  # 获取完整历史，某些构建脚本可能需要
-
-      # 第二步：设置 NuGet 环境（可选，系统已内置）
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
-
-      # 第三步：缓存 NuGet 包
-      - name: NuGet Cache
-        uses: actions/cache@v4
-        with:
-          path: packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.config') }}
-          restore-keys: nuget-${{ runner.os }}-
-
-      # 第四步：恢复 NuGet 包
-      - name: Nuget Restore
-        shell: cmd
-        working-directory: ${{github.workspace}}
-        run: nuget restore .\packages.config -PackagesDirectory .\packages\
-
-      # 第五步：构建工具（关键步骤）
-      # 官方workflow中使用 build_tools.cmd 而不是 build_init.cmd
-      - name: Build Tools
-        shell: cmd
-        working-directory: ${{github.workspace}}
-        run: build\build_tools.cmd
-
-      # 第六步：运行初始化脚本
-      # 如果上一步不够，再运行完整的初始化
-      - name: Run Build Initialization
-        shell: cmd
-        working-directory: ${{github.workspace}}
-        run: build\build_init.cmd
-
-      # 第七步：运行发布构建脚本
-      - name: Run Release Build
-        shell: cmd
-        working-directory: ${{github.workspace}}
-        run: build\build_release.cmd
-        continue-on-error: false  # 确保错误时停止
-
-      # 第八步：上传构建好的文件
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        if: success()  # 只在构建成功时上传
-        with:
-          name: SystemInformer-Binary-Win32-${{ github.sha }}
-          path: |
-            bin/Release32/
-            bin/Release64/
-            bin/ReleaseARM64/
-          if-no-files-found: warn  # 如果没有文件则警告
-
-  # 可选：添加一个调试构建任务来帮助排查问题
-  build-debug:
-    runs-on: windows-latest
-    if: failure()  # 只在主构建失败时运行
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
+          # 保留子模块并获取全部历史，避免部分脚本依赖 git 历史失败
           submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
 
       - name: NuGet Cache
         uses: actions/cache@v4
@@ -91,27 +27,45 @@ jobs:
           restore-keys: nuget-${{ runner.os }}-
 
       - name: Nuget Restore
+        working-directory: ${{ github.workspace }}
         shell: cmd
-        working-directory: ${{github.workspace}}
         run: nuget restore .\packages.config -PackagesDirectory .\packages\
 
-      - name: Build Tools
+      - name: Run build_init.cmd (initialize tools / generate headers)
+        working-directory: ${{ github.workspace }}
         shell: cmd
-        working-directory: ${{github.workspace}}
         run: build\build_init.cmd
 
-      # 使用调试模式构建，可能会提供更多信息
-      - name: Build Debug Version
+      - name: Verify generated files & search for missing symbols (debug)
+        working-directory: ${{ github.workspace }}
         shell: cmd
-        working-directory: ${{github.workspace}}
-        run: build\build_debug.cmd
-        continue-on-error: true
+        run: |
+          echo ==== List build output and include dirs ====
+          if exist build\output (dir /b /s build\output) else echo no build\output
+          echo ==== search for phlib headers and settings ====
+          dir /b /s phlib\*.h || dir /b /s SystemInformer\*.h || echo "no phlib headers found"
+          echo ==== grep for PhGetIntegerSetting declaration ====
+          findstr /s /n /c:"PhGetIntegerSetting" *.h *.c *.cpp || echo "PhGetIntegerSetting not found in sources"
 
-      - name: Upload Debug Logs
+      - name: (optional) Build thirdparty libs (if your logs previously had LINK C1047)
+        working-directory: ${{ github.workspace }}
+        shell: cmd
+        run: |
+          if exist build\build_thirdparty.cmd (
+            echo "Running build_thirdparty.cmd"
+            build\build_thirdparty.cmd
+          ) else (
+            echo "No build_thirdparty.cmd present - skipping"
+          )
+
+      - name: Run Release Build
+        working-directory: ${{ github.workspace }}
+        shell: cmd
+        run: build\build_release.cmd
+
+      - name: Upload Artifacts
+        if: success()
         uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: debug-logs
-          path: |
-            *.log
-            build/*.log
+          name: SystemInformer-Binary-Win32
+          path: bin/Release32/
