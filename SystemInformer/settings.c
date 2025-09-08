@@ -387,6 +387,10 @@ VOID PhAddDefaultSettings(
     PhpAddIntegerSetting(L"KsiEnableFsFeatureOffloadWrite", L"1"); // SUPPORTED_FS_FEATURES_OFFLOAD_WRITE
     PhpAddIntegerSetting(L"KsiEnableFsFeatureQueryOpen", L"1");    // SUPPORTED_FS_FEATURES_QUERY_OPEN
     PhpAddIntegerSetting(L"KsiEnableFsFeatureBypassIO", L"1");     // SUPPORTED_FS_FEATURES_BYPASS_IO
+    
+    // Language settings
+    PhpAddIntegerSetting(L"Language", L"0"); // PhLanguageEnglish
+    PhpAddIntegerSetting(L"AutoDetectLanguage", L"1");
 }
 
 VOID PhUpdateCachedSettings(

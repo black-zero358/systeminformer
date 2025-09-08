@@ -107,6 +107,7 @@ INT WINAPI wWinMain(
     PhInitializeAppSystem();
     PhInitializeCallbacks();
     PhEmInitialization();
+    PhInitializeLanguageSupport();
 
     if (PhStartupParameters.ShowOptions)
     {

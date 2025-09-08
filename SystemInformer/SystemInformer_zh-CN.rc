@@ -1,0 +1,269 @@
+// Microsoft Visual C++ generated resource script.
+// SystemInformer Simplified Chinese (zh-CN) Resources
+//
+#pragma code_page(65001)
+
+#include "resource.h"
+#include "include/phstring_res.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+#include "include/phappres.h"
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (Simplified, PRC) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#include ""winres.h""\r\n"
+    "#include ""include/phappres.h""\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PROCGENERAL DIALOGEX 0, 0, 260, 260
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "常规"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "权限",IDC_PERMISSIONS,143,218,50,14
+    PUSHBUTTON      "终止",IDC_TERMINATE,197,218,50,14
+    GROUPBOX        "文件",IDC_FILE,7,7,246,103
+    ICON            "",IDC_FILEICON,14,18,20,20
+    EDITTEXT        IDC_NAME,44,17,182,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    EDITTEXT        IDC_COMPANYNAME,44,29,183,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    CONTROL         "<a>公司名称链接</a>",IDC_COMPANYNAME_LINK,"SysLink",LWS_NOPREFIX | NOT WS_VISIBLE | WS_TABSTOP,46,29,183,9
+    LTEXT           "版本:",IDC_STATIC,15,41,27,8
+    EDITTEXT        IDC_VERSION,44,41,113,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    LTEXT           "映像文件名 (Win32):",IDC_STATIC,15,55,86,8
+    EDITTEXT        IDC_FILENAME,15,65,191,12,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "检查",IDC_INSPECT,210,64,17,15,BS_ICON
+    PUSHBUTTON      "打开",IDC_OPENFILENAME,230,64,17,15,BS_ICON
+    GROUPBOX        "进程",IDC_PROCESS,7,112,246,142
+    LTEXT           "命令行:",IDC_STATIC,13,124,50,8
+    EDITTEXT        IDC_CMDLINE,79,122,147,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "当前目录:",IDC_STATIC,13,140,60,8
+    EDITTEXT        IDC_CURDIR,79,138,168,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "启动时间:",IDC_STATIC,13,156,28,8
+    EDITTEXT        IDC_STARTED,79,154,168,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "父控制台:",IDC_STATIC,13,172,52,8
+    EDITTEXT        IDC_PARENTCONSOLE,79,170,168,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "父进程:",IDC_STATIC,13,188,52,8
+    EDITTEXT        IDC_PARENTPROCESS,79,186,147,12,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "查看",IDC_VIEWPARENTPROCESS,230,185,17,15,BS_ICON
+    LTEXT           "缓解策略:",IDC_STATIC,13,204,59,8
+    EDITTEXT        IDC_MITIGATION,79,202,126,12,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "详细信息",IDC_VIEWMITIGATION,209,201,38,14
+    LTEXT           "保护:",IDC_STATIC,13,222,40,8
+    EDITTEXT        IDC_PROTECTION,53,222,80,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    LTEXT           "映像类型:",IDC_STATIC,13,233,40,8
+    EDITTEXT        IDC_PROCESSTYPETEXT,53,233,160,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    PUSHBUTTON      "查看",IDC_VIEWCOMMANDLINE,230,121,17,15,BS_ICON
+    LTEXT           "映像文件名:",IDC_STATIC,15,80,86,8
+    EDITTEXT        IDC_FILENAMEWIN32,15,91,191,12,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "检查",IDC_INSPECT2,210,90,17,15,BS_ICON
+    PUSHBUTTON      "打开",IDC_OPENFILENAME2,230,90,17,15,BS_ICON
+    PUSHBUTTON      "策略",IDC_INTEGRITY,90,218,50,14
+END
+
+IDD_PROCMODULES DIALOGEX 0, 0, 260, 260
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "模块"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LIST,"PhTreeNew",WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_TABSTOP | 0xa,2,19,256,239,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_SEARCH,114,3,144,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "选项",IDC_FILTEROPTIONS,2,2,50,14
+END
+
+IDD_PROCTHREADS DIALOGEX 0, 0, 260, 260
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "线程"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LIST,"PhTreeNew",WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_TABSTOP | 0xa,2,19,256,239,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_SEARCH,114,3,144,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "选项",IDC_OPTIONS,2,2,50,14
+    LTEXT           "",IDC_STATE,56,5,8,8
+END
+
+IDD_PROCHANDLES DIALOGEX 0, 0, 260, 260
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "句柄"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "选项",IDC_OPTIONS,2,2,50,14
+    EDITTEXT        IDC_HANDLESEARCH,114,3,144,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_LIST,"PhTreeNew",WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_TABSTOP | 0x2,2,19,256,239,WS_EX_CLIENTEDGE
+END
+
+IDD_PROCENVIRONMENT DIALOGEX 0, 0, 260, 260
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "环境"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LIST,"PhTreeNew",WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_TABSTOP | 0xa,2,19,256,239,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_SEARCH,114,3,144,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "刷新",IDC_REFRESH,53,2,50,14
+    PUSHBUTTON      "选项",IDC_OPTIONS,2,2,50,14
+END
+
+IDD_ABOUT DIALOGEX 0, 0, 270, 215
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    ICON            IDI_PROCESSHACKER,IDC_FILEICON,16,11,20,20
+    CONTROL         "系统信息器",IDC_ABOUT_NAME,"SysLink",WS_TABSTOP,45,12,192,8
+    LTEXT           "版权所有 (c) Winsider Seminars && Solutions, Inc.",IDC_STATIC,45,24,193,8
+    CONTROL         "鸣谢.",IDC_CREDITS,"SysLink",WS_TABSTOP,15,49,248,141
+    CONTROL         "<a href=""https://systeminformer.sourceforge.io"">SourceForge.net 上的系统信息器</a>",IDC_LINK_SF,
+                    "SysLink",WS_TABSTOP,7,197,200,11
+    PUSHBUTTON      "诊断",IDC_DIAGNOSTICS,160,194,50,14
+    DEFPUSHBUTTON   "确定",IDOK,213,194,50,14
+END
+
+IDD_RUNAS DIALOGEX 0, 0, 293, 127
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "运行身份"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "输入要以指定用户身份启动的命令。",IDC_TITLE,7,7,160,8
+    LTEXT           "程序:",IDC_STATIC,7,23,30,8
+    LTEXT           "用户名:",IDC_STATIC,7,40,38,8
+    COMBOBOX        IDC_USERNAME,53,38,123,12,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "类型:",IDC_STATIC,184,40,20,8
+    COMBOBOX        IDC_TYPE,208,38,78,12,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "密码:",IDC_STATIC,7,56,34,8
+    EDITTEXT        IDC_PASSWORD,53,55,123,12,ES_PASSWORD | ES_AUTOHSCROLL
+    CONTROL         "切换提升权限",IDC_TOGGLEELEVATION,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,183,56,69,10
+    LTEXT           "会话 ID:",IDC_STATIC,7,73,37,8
+    LTEXT           "桌面:",IDC_STATIC,7,90,30,8
+    DEFPUSHBUTTON   "确定",IDOK,127,106,50,14
+    PUSHBUTTON      "取消",IDCANCEL,182,106,50,14
+    COMBOBOX        IDC_SESSIONCOMBO,53,72,123,12,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_DESKTOPCOMBO,53,88,123,12,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "浏览",IDC_BROWSE,237,106,50,14
+    CONTROL         "创建暂停",IDC_TOGGLESUSPENDED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,183,70,75,10
+    COMBOBOX        IDC_PROGRAMCOMBO,53,21,233,12,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "创建 UIAccess",IDC_TOGGLEUIACCESS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,183,84,69,10
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_GENERAL                "常规"
+    IDS_MODULES                "模块"
+    IDS_THREADS                "线程"
+    IDS_HANDLES                "句柄"
+    IDS_ENVIRONMENT            "环境"
+    IDS_ABOUT                  "关于"
+    IDS_RUN_AS                 "运行身份"
+    IDS_PERMISSIONS            "权限"
+    IDS_TERMINATE              "终止"
+    IDS_FILE                   "文件"
+    IDS_PROCESS                "进程"
+    IDS_REFRESH                "刷新"
+    IDS_OPTIONS                "选项"
+    IDS_OK                     "确定"
+    IDS_CANCEL                 "取消"
+    IDS_BROWSE                 "浏览"
+    IDS_SEARCH                 "搜索"
+    IDS_COPY                   "复制"
+    IDS_SAVE                   "保存"
+    IDS_CLOSE                  "关闭"
+    IDS_INSPECT                "检查"
+    IDS_OPEN                   "打开"
+    IDS_VIEW                   "查看"
+    IDS_DETAILS                "详细信息"
+    IDS_POLICY                 "策略"
+    IDS_DIAGNOSTICS            "诊断"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_BUTTON_YES             "是"
+    IDS_BUTTON_NO              "否"
+    IDS_BUTTON_APPLY           "应用"
+    IDS_BUTTON_RESET           "重置"
+    IDS_BUTTON_DELETE          "删除"
+    IDS_BUTTON_EDIT            "编辑"
+    IDS_BUTTON_NEW             "新建"
+    IDS_BUTTON_ADD             "添加"
+    IDS_BUTTON_REMOVE          "移除"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STATUS_READY           "就绪"
+    IDS_STATUS_LOADING         "加载中..."
+    IDS_STATUS_PROCESSING      "处理中..."
+    IDS_STATUS_COMPLETE        "完成"
+    IDS_STATUS_ERROR           "错误"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_ERROR_ACCESS_DENIED    "访问被拒绝"
+    IDS_ERROR_FILE_NOT_FOUND   "找不到文件"
+    IDS_ERROR_INVALID_PARAMETER "参数无效"
+    IDS_ERROR_INSUFFICIENT_MEMORY "内存不足"
+    IDS_ERROR_OPERATION_FAILED "操作失败"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_PROCESS_NAME           "进程名"
+    IDS_PROCESS_PID            "进程 ID"
+    IDS_PROCESS_MEMORY         "内存"
+    IDS_PROCESS_CPU            "CPU"
+    IDS_PROCESS_THREADS        "线程数"
+    IDS_PROCESS_HANDLES        "句柄数"
+    IDS_PROCESS_STATUS         "状态"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_SYSTEM_INFORMATION     "系统信息"
+    IDS_CPU_USAGE              "CPU 使用率"
+    IDS_MEMORY_USAGE           "内存使用率"
+    IDS_DISK_USAGE             "磁盘使用率"
+    IDS_NETWORK_USAGE          "网络使用率"
+END
+
+#endif    // Chinese (Simplified, PRC) resources
+/////////////////////////////////////////////////////////////////////////////

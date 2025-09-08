@@ -329,6 +329,7 @@
     <ClCompile Include="thrdstks.c" />
     <ClCompile Include="tokprp.c" />
     <ClCompile Include="usrlist.c" />
+    <ClCompile Include="phlang.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\actions.h" />
@@ -382,6 +383,7 @@
     <ClInclude Include="include\memprv.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="include\sysinfop.h" />
+    <ClInclude Include="include\phlang.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\case_sensitive_modern_dark.svg" />
@@ -400,6 +402,7 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SystemInformer.rc" />
+    <ResourceCompile Include="SystemInformer_zh-CN.rc" />
     <ResourceCompile Include="version.rc" />
     <ResourceCompile Include="..\kphlib\include\sistatus.rc" />
   </ItemGroup>
