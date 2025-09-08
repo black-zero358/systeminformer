@@ -1,5 +1,5 @@
 # 工作流的名称
-name: Build System Informer Release (Direct MSBuild)
+name: Build System Informer (Official Method)
 
 # 触发工作流的事件
 on:
@@ -20,28 +20,25 @@ jobs:
         with:
           submodules: 'recursive'
 
-      # 第二步：设置 NuGet (用于恢复项目包)
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
-
-      # 第三步：设置 MSBuild 环境
+      # 第二步：设置 MSBuild 环境 (脚本需要它)
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
-      # 第四步：恢复解决方案的 NuGet 包
-      # 这是一个标准的预备步骤，确保所有外部依赖项都已下载
-      - name: Restore NuGet packages
-        run: nuget restore SystemInformer.sln
+      # 第三步：运行初始化脚本 (关键步骤)
+      # 这一步会编译项目所需的自定义工具, 例如 CustomBuildTool.exe
+      - name: Run Build Initialization
+        run: .\build\build_init.cmd
+        shell: cmd
 
-      # 第五步：直接使用 MSBuild 编译整个解决方案
-      # 这是最核心的改变。我们直接调用 msbuild，不再使用 .cmd 脚本
-      - name: Build Solution with MSBuild
-        run: msbuild SystemInformer.sln -p:Configuration=Release -p:Platform=Win32 /m
+      # 第四步：运行发布构建脚本
+      # 现在初始化已完成, 此脚本可以找到所有工具和依赖项
+      - name: Run Release Build
+        run: .\build\build_release.cmd
+        shell: cmd
 
-      # 第六步：上传构建好的文件
+      # 第五步：上传构建好的文件
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: SystemInformer-Binary-Win32
-          # 输出路径应该保持不变
           path: bin/Release32/
