@@ -1,5 +1,5 @@
 # 工作流的名称，会显示在 Actions 页面
-name: Build System Informer Release
+name: Build System Infor mer Release
 
 # 触发工作流的事件
 on:
@@ -28,17 +28,23 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
-      # 第三步：运行初始化脚本 (已修正路径)
+      # 第三步：运行初始化脚本
       - name: Run Build Initialization
         run: .\build\build_init.cmd
         shell: cmd
 
-      # 第四步：运行发布构建脚本 (已修正路径)
+      # 第四步（新增）：运行第三方库构建脚本
+      # 根据官方文档，这个脚本用于解决依赖问题，很可能也包括配置头文件路径
+      - name: Run Third-party Build
+        run: .\build\build_thirdparty.cmd
+        shell: cmd
+
+      # 第五步：运行发布构建脚本
       - name: Run Release Build
         run: .\build\build_release.cmd
         shell: cmd
 
-      # 第五步：上传构建产物
+      # 第六步：上传构建产物
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
