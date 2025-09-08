@@ -1,5 +1,5 @@
 # 工作流的名称
-name: Build System Informer (Official Method)
+name: Build System Informer (Fixed)
 
 # 触发工作流的事件
 on:
@@ -12,45 +12,106 @@ jobs:
   build:
     # 使用官方指定的 Windows 虚拟机环境
     runs-on: windows-latest
-
+    
     steps:
       # 第一步：检出代码
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5  # 更新到v5，与官方保持一致
         with:
-          # 保留子模块拉取，这是个好习惯
           submodules: 'recursive'
+          fetch-depth: 0  # 获取完整历史，某些构建脚本可能需要
 
-      # 第二步 (新增): 设置 NuGet 环境
+      # 第二步：设置 NuGet 环境（可选，系统已内置）
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
 
-      # 第三步 (新增): 缓存 NuGet 包以加快未来构建速度
+      # 第三步：缓存 NuGet 包
       - name: NuGet Cache
         uses: actions/cache@v4
         with:
           path: packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.config') }}
+          restore-keys: nuget-${{ runner.os }}-
 
-      # 第四步 (关键): 恢复 NuGet 包
-      # 这是我们之前缺失的关键步骤, 它会下载项目所需的外部库
+      # 第四步：恢复 NuGet 包
       - name: Nuget Restore
+        shell: cmd
+        working-directory: ${{github.workspace}}
         run: nuget restore .\packages.config -PackagesDirectory .\packages\
-        shell: cmd
 
-      # 第五步：运行初始化脚本
+      # 第五步：构建工具（关键步骤）
+      # 官方workflow中使用 build_tools.cmd 而不是 build_init.cmd
+      - name: Build Tools
+        shell: cmd
+        working-directory: ${{github.workspace}}
+        run: build\build_tools.cmd
+
+      # 第六步：运行初始化脚本
+      # 如果上一步不够，再运行完整的初始化
       - name: Run Build Initialization
+        shell: cmd
+        working-directory: ${{github.workspace}}
         run: build\build_init.cmd
-        shell: cmd
 
-      # 第六步：运行发布构建脚本
+      # 第七步：运行发布构建脚本
       - name: Run Release Build
-        run: build\build_release.cmd
         shell: cmd
+        working-directory: ${{github.workspace}}
+        run: build\build_release.cmd
+        continue-on-error: false  # 确保错误时停止
 
-      # 第七步：上传构建好的文件
+      # 第八步：上传构建好的文件
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
+        if: success()  # 只在构建成功时上传
         with:
-          name: SystemInformer-Binary-Win32
-          path: bin/Release32/
+          name: SystemInformer-Binary-Win32-${{ github.sha }}
+          path: |
+            bin/Release32/
+            bin/Release64/
+            bin/ReleaseARM64/
+          if-no-files-found: warn  # 如果没有文件则警告
+
+  # 可选：添加一个调试构建任务来帮助排查问题
+  build-debug:
+    runs-on: windows-latest
+    if: failure()  # 只在主构建失败时运行
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          submodules: 'recursive'
+
+      - name: NuGet Cache
+        uses: actions/cache@v4
+        with:
+          path: packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.config') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Nuget Restore
+        shell: cmd
+        working-directory: ${{github.workspace}}
+        run: nuget restore .\packages.config -PackagesDirectory .\packages\
+
+      - name: Build Tools
+        shell: cmd
+        working-directory: ${{github.workspace}}
+        run: build\build_init.cmd
+
+      # 使用调试模式构建，可能会提供更多信息
+      - name: Build Debug Version
+        shell: cmd
+        working-directory: ${{github.workspace}}
+        run: build\build_debug.cmd
+        continue-on-error: true
+
+      - name: Upload Debug Logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: debug-logs
+          path: |
+            *.log
+            build/*.log
