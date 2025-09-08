@@ -190,6 +190,8 @@ INT WINAPI wWinMain(
     result = PhMainMessageLoop();
 
     PhEnableTerminationPolicy(FALSE);
+    
+    PhCleanupLanguageSupport();
 
     if (PhEnableKsiSupport)
     {

@@ -148,8 +148,10 @@ HINSTANCE PhLoadLanguageResourceDll(PH_LANGUAGE_ID LanguageId)
             PhDereferenceObject(baseName);
             
             // Get directory path
-            if (PhGetDirectoryPath(resourcePath, &resourcePath[0]))
+            PWSTR lastSlash = wcsrchr(resourcePath, L'\\');
+            if (lastSlash)
             {
+                *lastSlash = L'\0';
                 PhSwprintf(resourcePath, RTL_NUMBER_OF(resourcePath), L"%s\\%s", 
                     resourcePath, fileName);
                 

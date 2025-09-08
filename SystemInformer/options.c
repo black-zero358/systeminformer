@@ -1662,6 +1662,25 @@ static VOID PhpAdvancedPageSave(
     PhSetIntegerSetting(L"MaxSizeUnit", PhMaxSizeUnit = ComboBox_GetCurSel(GetDlgItem(hwndDlg, IDC_MAXSIZEUNIT)));
     PhSetIntegerSetting(L"IconProcesses", PhGetDialogItemValue(hwndDlg, IDC_ICONPROCESSES));
 
+    // Save language settings
+    {
+        PH_LANGUAGE_ID selectedLanguage = (PH_LANGUAGE_ID)ComboBox_GetCurSel(GetDlgItem(hwndDlg, IDC_LANGUAGE));
+        BOOLEAN autoDetect = Button_GetCheck(GetDlgItem(hwndDlg, IDC_AUTO_DETECT_LANGUAGE)) == BST_CHECKED;
+        
+        if (selectedLanguage != PhCurrentLanguage || autoDetect != !!PhGetIntegerSetting(L"AutoDetectLanguage"))
+        {
+            PhSetIntegerSetting(L"Language", selectedLanguage);
+            PhSetIntegerSetting(L"AutoDetectLanguage", autoDetect);
+            
+            if (!autoDetect && selectedLanguage < PhLanguageMax)
+            {
+                PhSetCurrentLanguage(selectedLanguage);
+            }
+            
+            RestartRequired = TRUE; // Language change requires restart
+        }
+    }
+
     if (!PhEqualString(PhaGetDlgItemText(hwndDlg, IDC_DBGHELPSEARCHPATH), PhaGetStringSetting(L"DbgHelpSearchPath"), TRUE))
     {
         PhSetStringSetting2(L"DbgHelpSearchPath", &PhaGetDlgItemText(hwndDlg, IDC_DBGHELPSEARCHPATH)->sr);
@@ -1789,10 +1808,12 @@ INT_PTR CALLBACK PhpOptionsGeneralDlgProc(
     case WM_INITDIALOG:
         {
             HWND comboBoxHandle;
+            HWND languageComboBoxHandle;
             ULONG i;
             LOGFONT font;
 
             comboBoxHandle = GetDlgItem(hwndDlg, IDC_MAXSIZEUNIT);
+            languageComboBoxHandle = GetDlgItem(hwndDlg, IDC_LANGUAGE);
             ListViewHandle = GetDlgItem(hwndDlg, IDC_SETTINGS);
 
             PhpOptionsSetImageList(ListViewHandle, FALSE);
@@ -1800,6 +1821,7 @@ INT_PTR CALLBACK PhpOptionsGeneralDlgProc(
             PhInitializeLayoutManager(&LayoutManager, hwndDlg);
             PhAddLayoutItem(&LayoutManager, GetDlgItem(hwndDlg, IDC_SEARCHENGINE), NULL, PH_ANCHOR_LEFT | PH_ANCHOR_TOP | PH_ANCHOR_RIGHT);
             PhAddLayoutItem(&LayoutManager, GetDlgItem(hwndDlg, IDC_PEVIEWER), NULL, PH_ANCHOR_LEFT | PH_ANCHOR_TOP | PH_ANCHOR_RIGHT);
+            PhAddLayoutItem(&LayoutManager, GetDlgItem(hwndDlg, IDC_LANGUAGE), NULL, PH_ANCHOR_LEFT | PH_ANCHOR_TOP);
             PhAddLayoutItem(&LayoutManager, ListViewHandle, NULL, PH_ANCHOR_ALL);
             PhAddLayoutItem(&LayoutManager, GetDlgItem(hwndDlg, IDC_DBGHELPSEARCHPATH), NULL, PH_ANCHOR_LEFT | PH_ANCHOR_TOP | PH_ANCHOR_RIGHT);
 
@@ -1816,6 +1838,17 @@ INT_PTR CALLBACK PhpOptionsGeneralDlgProc(
                 ComboBox_SetCurSel(comboBoxHandle, PhMaxSizeUnit);
             else
                 ComboBox_SetCurSel(comboBoxHandle, RTL_NUMBER_OF(PhSizeUnitNames) - 1);
+
+            // Initialize language combo box
+            for (i = 0; i < PhLanguageMax; i++)
+            {
+                ComboBox_AddString(languageComboBoxHandle, PhGetLanguageNativeName(i));
+            }
+            ComboBox_SetCurSel(languageComboBoxHandle, PhCurrentLanguage);
+            
+            // Initialize auto-detect checkbox
+            Button_SetCheck(GetDlgItem(hwndDlg, IDC_AUTO_DETECT_LANGUAGE), 
+                PhGetIntegerSetting(L"AutoDetectLanguage") ? BST_CHECKED : BST_UNCHECKED);
 
             PhSetDialogItemText(hwndDlg, IDC_SEARCHENGINE, PhaGetStringSetting(L"SearchEngine")->Buffer);
             PhSetDialogItemText(hwndDlg, IDC_PEVIEWER, PhaGetStringSetting(L"ProgramInspectExecutables")->Buffer);

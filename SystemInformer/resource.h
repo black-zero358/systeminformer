@@ -602,8 +602,10 @@
 #define IDC_MINIDUMP_WITH_IPT_TRACE                  1443
 #define IDC_MINIDUMP_SCAN_INACCESSIBLE_PARTIAL_PAGES 1444
 #define IDC_MINIDUMP_FILTER_WRITE_COMBINE_MEM        1445
-#define IDC_ZMEMSLOTS_V                 1446
-#define IDC_ZMEMFORMFACTOR_V            1447
+#define IDC_LANGUAGE                        1446
+#define IDC_AUTO_DETECT_LANGUAGE            1447
+#define IDC_ZMEMSLOTS_V                 1448
+#define IDC_ZMEMFORMFACTOR_V            1449
 #define IDC_ZMEMTYPE_V                  1448
 #define IDC_ZMEMTECHNOLOGY_V            1449
 #define IDC_ZMEMSPEED_V                 1450
