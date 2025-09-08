@@ -1,54 +1,47 @@
-# 工作流的名称，会显示在 Actions 页面
-name: Build System Infor mer Release
+# 工作流的名称
+name: Build System Informer Release (Direct MSBuild)
 
 # 触发工作流的事件
 on:
-  # 允许你手动从 GitHub 网页上点击按钮来触发构建
   workflow_dispatch:
-
-  # （可选）每当你向 main 分支推送代码时，也会自动触发构建
   push:
     branches:
       - main
 
 jobs:
   build:
-    # 指定运行此任务的虚拟机环境，使用最新的 Windows Server
+    # 使用最新的 Windows 虚拟机环境
     runs-on: windows-latest
 
     steps:
-      # 第一步：检出（下载）你的仓库代码到虚拟机
+      # 第一步：检出代码和所有子模块
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # 关键！我们之前发现项目有子模块，这里会自动拉取它们
           submodules: 'recursive'
 
-      # 第二步：设置 MSBuild 环境
+      # 第二步：设置 NuGet (用于恢复项目包)
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      # 第三步：设置 MSBuild 环境
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
-      # 第三步：运行初始化脚本
-      - name: Run Build Initialization
-        run: .\build\build_init.cmd
-        shell: cmd
+      # 第四步：恢复解决方案的 NuGet 包
+      # 这是一个标准的预备步骤，确保所有外部依赖项都已下载
+      - name: Restore NuGet packages
+        run: nuget restore SystemInformer.sln
 
-      # 第四步（新增）：运行第三方库构建脚本
-      # 根据官方文档，这个脚本用于解决依赖问题，很可能也包括配置头文件路径
-      - name: Run Third-party Build
-        run: .\build\build_thirdparty.cmd
-        shell: cmd
+      # 第五步：直接使用 MSBuild 编译整个解决方案
+      # 这是最核心的改变。我们直接调用 msbuild，不再使用 .cmd 脚本
+      - name: Build Solution with MSBuild
+        run: msbuild SystemInformer.sln -p:Configuration=Release -p:Platform=Win32 /m
 
-      # 第五步：运行发布构建脚本
-      - name: Run Release Build
-        run: .\build\build_release.cmd
-        shell: cmd
-
-      # 第六步：上传构建产物
+      # 第六步：上传构建好的文件
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          # 打包后的 zip 文件名
-          name: SystemInformer-Binary
-          # 需要打包上传的文件夹路径，构建产物通常在 'bin' 目录下
-          path: bin/
+          name: SystemInformer-Binary-Win32
+          # 输出路径应该保持不变
+          path: bin/Release32/
