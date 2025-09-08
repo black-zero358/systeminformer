@@ -18,7 +18,6 @@ jobs:
 
     steps:
       # 第一步：检出（下载）你的仓库代码到虚拟机
-      # 这是标准操作
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -26,24 +25,20 @@ jobs:
           submodules: 'recursive'
 
       # 第二步：设置 MSBuild 环境
-      # 这个 action 会自动找到 Visual Studio 的 msbuild.exe 并将其添加到系统路径
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
-      # 第三步：运行初始化脚本
-      # 和你在本地做的一样，运行官方的初始化命令
+      # 第三步：运行初始化脚本 (已修正路径)
       - name: Run Build Initialization
-        run: .\build_init.cmd
+        run: .\build\build_init.cmd
         shell: cmd
 
-      # 第四步：运行发布构建脚本
-      # 和你在本地做的一样，运行官方的构建命令
+      # 第四步：运行发布构建脚本 (已修正路径)
       - name: Run Release Build
-        run: .\build_release.cmd
+        run: .\build\build_release.cmd
         shell: cmd
 
       # 第五步：上传构建产物
-      # 将构建生成的文件打包，以便你下载
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
